@@ -208,14 +208,6 @@
                     <button class="semester-btn active" data-semester="first">First Semester</button>
                     <button class="semester-btn" data-semester="second">Second Semester</button>
                 </div>
-
-                <div class="exam-dropdown">
-                    <button class="nav-btn" onclick="toggleExams()">Exams ▼</button>
-                    <div id="examDropdown" class="exam-content">
-                        <button class="selected" data-exam="1st-sem">1st Sem</button>
-                        <button data-exam="2nd-sem">2nd Sem</button>
-                        <button data-exam="full">Full</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -515,22 +507,6 @@
                 </div>
             </div>
     <script>
-        function toggleExams() {
-            document.getElementById("examDropdown").classList.toggle("show");
-        }
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.nav-btn')) {
-                var dropdowns = document.getElementsByClassName("exam-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
 
         // Add event listeners for subject buttons
         document.querySelectorAll('.nav-btn[data-subject]').forEach(button => {
