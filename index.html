@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Bank</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .subjects {
+            display: flex;
+            gap: 10px;
+        }
+
+        .secondary-nav {
+            display: flex;
+            gap: 10px;
+            padding-left: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-btn.active {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        .semester-toggle {
+            display: flex;
+            gap: 5px;
+            background-color: #f1f5f9;
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .semester-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            background: none;
+            transition: all 0.2s ease;
+        }
+
+        .semester-btn.active {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .exam-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .exam-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #ffffff;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            z-index: 1;
+            margin-top: 5px;
+            padding: 4px;
+        }
+
+        .exam-content button {
+            width: 100%;
+            padding: 8px 16px 8px 24px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .exam-content button.selected::before {
+            content: '•';
+            position: absolute;
+            left: 10px;
+            color: black;
+        }
+
+        .exam-content button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .unit-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .unit-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        .section-content {
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+        }
+
+        .semester-content {
+            display: none;
+        }
+
+        .semester-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Question Bank</h1>
+        </div>
+
+        <div class="nav-section">
+            <div class="subjects">
+                <button class="nav-btn" data-subject="arabic">
+                    <span>📚</span> Arabic
+                </button>
+                <button class="nav-btn active" data-subject="english">
+                    <span>🌎</span> English
+                </button>
+                <button class="nav-btn" data-subject="history">
+                    <span>📜</span> History
+                </button>
+                <button class="nav-btn" data-subject="islamic">
+                    <span>📖</span> Islamic
+                </button>
+            </div>
+
+            <div class="secondary-nav">
+                <div class="semester-toggle">
+                    <button class="semester-btn active" data-semester="first">First Semester</button>
+                    <button class="semester-btn" data-semester="second">Second Semester</button>
+                </div>
+
+                <div class="exam-dropdown">
+                    <button class="nav-btn" onclick="toggleExams()">Exams ▼</button>
+                    <div id="examDropdown" class="exam-content">
+                        <button class="selected" data-exam="1st-sem">1st Sem</button>
+                        <button data-exam="2nd-sem">2nd Sem</button>
+                        <button data-exam="full">Full</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content">
+            <!-- English First Semester -->
+            <div id="english-first" class="semester-content active">
+                <div class="unit-container">
+                    <div class="unit-title">English - First Semester</div>
+                    <!-- Units 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 4</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 5</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Second Semester -->
+            <div id="english-second" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">English - Second Semester</div>
+                    <!-- Units 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 4</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 5</div>
+                        <div class="section-content">Reading and Vocabulary</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arabic First Semester -->
+            <div id="arabic-first" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">Arabic - First Semester</div>
+                    <!-- Lessons 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Lesson 1</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 2</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 3</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 4</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 5</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arabic Second Semester -->
+            <div id="arabic-second" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">Arabic - Second Semester</div>
+                    <!-- Lessons 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Lesson 1</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 2</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 3</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 4</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Lesson 5</div>
+                        <div class="section-content">Reading</div>
+                        <div class="section-content">Grammar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History First Semester -->
+            <div id="history-first" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">History - First Semester</div>
+                    <!-- Unit 1 (5 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                        <div class="section-content">Section 5</div>
+                    </div>
+                    <!-- Unit 2 (6 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                        <div class="section-content">Section 5</div>
+                        <div class="section-content">Section 6</div>
+                    </div>
+                    <!-- Unit 3 (4 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Second Semester -->
+            <div id="history-second" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">History - Second Semester</div>
+                    <!-- Unit 1 (8 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                        <div class="section-content">Section 5</div>
+                        <div class="section-content">Section 6</div>
+                        <div class="section-content">Section 7</div>
+                        <div class="section-content">Section 8</div>
+                    </div>
+                    <!-- Unit 2 (4 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                    </div>
+                    <!-- Unit 3 (6 sections) -->
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Section 1</div>
+                        <div class="section-content">Section 2</div>
+                        <div class="section-content">Section 3</div>
+                        <div class="section-content">Section 4</div>
+                        <div class="section-content">Section 5</div>
+                        <div class="section-content">Section 6</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Islamic First Semester -->
+            <div id="islamic-first" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">Islamic - First Semester</div>
+                    <!-- Units 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 4</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 5</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Islamic Second Semester -->
+            <div id="islamic-second" class="semester-content">
+                <div class="unit-container">
+                    <div class="unit-title">Islamic - Second Semester</div>
+                    <!-- Units 1-5 -->
+                    <div class="section">
+                        <div class="section-title">Unit 1</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 2</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 3</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 4</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Unit 5</div>
+                        <div class="section-content">Fundamentals</div>
+                        <div class="section-content">Practice</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleExams() {
+            document.getElementById("examDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.nav-btn')) {
+                var dropdowns = document.getElementsByClassName("exam-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Add event listeners for subject buttons
+        document.querySelectorAll('.nav-btn[data-subject]').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all subject buttons
+                document.querySelectorAll('.nav-btn[data-subject]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding content
+                updateContent();
+            });
+        });
+
+        // Add event listeners for semester buttons
+        document.querySelectorAll('.semester-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all semester buttons
+                document.querySelectorAll('.semester-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding content
+                updateContent();
+            });
+        });
+
+        function updateContent() {
+            // Get active subject and semester
+            const activeSubject = document.querySelector('.nav-btn[data-subject].active').dataset.subject;
+            const activeSemester = document.querySelector('.semester-btn.active').dataset.semester;
+            
+            // Hide all content
+            document.querySelectorAll('.semester-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected content
+            const contentId = `${activeSubject}-${activeSemester}`;
+            document.getElementById(contentId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
