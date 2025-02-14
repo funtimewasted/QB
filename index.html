@@ -1,173 +1,428 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Plus, Save, X } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Bank</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
 
-const QuestionManager = () => {
-  const [questions, setQuestions] = useState({});
-  const [newQuestion, setNewQuestion] = useState({
-    question: '',
-    options: ['', '', '', ''],
-    answer: ''
-  });
-  const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedUnit, setSelectedUnit] = useState('');
-  const [selectedLesson, setSelectedLesson] = useState('');
-  
-  // Load questions from localStorage on component mount
-  useEffect(() => {
-    const savedQuestions = localStorage.getItem('lessonQuestions');
-    if (savedQuestions) {
-      setQuestions(JSON.parse(savedQuestions));
-    }
-  }, []);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  // Save questions to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('lessonQuestions', JSON.stringify(questions));
-  }, [questions]);
+        .header {
+            margin-bottom: 24px;
+        }
 
-  const handleAddQuestion = () => {
-    if (!selectedSubject || !selectedUnit || !selectedLesson) {
-      alert('Please select a subject, unit, and lesson first');
-      return;
-    }
+        .header h1 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+            color: #0f172a;
+        }
 
-    const path = `${selectedSubject}/${selectedUnit}/${selectedLesson}`;
-    const currentQuestions = questions[path] || [];
-    
-    setQuestions({
-      ...questions,
-      [path]: [...currentQuestions, { ...newQuestion, id: Date.now() }]
-    });
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-    setNewQuestion({
-      question: '',
-      options: ['', '', '', ''],
-      answer: ''
-    });
-  };
+        .subjects {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-  const handleDeleteQuestion = (path, questionId) => {
-    const updatedQuestions = questions[path].filter(q => q.id !== questionId);
-    setQuestions({
-      ...questions,
-      [path]: updatedQuestions
-    });
-  };
+        .nav-btn {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+            color: #0f172a;
+        }
 
-  return (
-    <Card className="w-full max-w-4xl">
-      <CardHeader>
-        <CardTitle>Question Manager</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {/* Selection Controls */}
-          <div className="grid grid-cols-3 gap-4">
-            <select 
-              className="p-2 border rounded"
-              value={selectedSubject}
-              onChange={(e) => setSelectedSubject(e.target.value)}
-            >
-              <option value="">Select Subject</option>
-              <option value="english">English</option>
-              <option value="اللغة العربية">اللغة العربية</option>
-              <option value="التاريخ">التاريخ</option>
-              <option value="دين">دين</option>
-            </select>
-            
-            <select 
-              className="p-2 border rounded"
-              value={selectedUnit}
-              onChange={(e) => setSelectedUnit(e.target.value)}
-            >
-              <option value="">Select Unit</option>
-              <option value="Unit 1">Unit 1</option>
-              <option value="Unit 2">Unit 2</option>
-              <option value="Unit 3">Unit 3</option>
-              <option value="Unit 4">Unit 4</option>
-              <option value="Unit 5">Unit 5</option>
-            </select>
-            
-            <select 
-              className="p-2 border rounded"
-              value={selectedLesson}
-              onChange={(e) => setSelectedLesson(e.target.value)}
-            >
-              <option value="">Select Lesson</option>
-              <option value="Reading and Vocabulary">Reading and Vocabulary</option>
-              <option value="Grammar">Grammar</option>
-            </select>
-          </div>
+        .nav-btn:hover {
+            background-color: #f1f5f9;
+        }
 
-          {/* New Question Form */}
-          <div className="space-y-4 border p-4 rounded">
-            <input
-              type="text"
-              placeholder="Enter question"
-              className="w-full p-2 border rounded"
-              value={newQuestion.question}
-              onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
-            />
-            
-            {newQuestion.options.map((option, index) => (
-              <input
-                key={index}
-                type="text"
-                placeholder={`Option ${index + 1}`}
-                className="w-full p-2 border rounded"
-                value={option}
-                onChange={(e) => {
-                  const newOptions = [...newQuestion.options];
-                  newOptions[index] = e.target.value;
-                  setNewQuestion({ ...newQuestion, options: newOptions });
-                }}
-              />
-            ))}
-            
-            <input
-              type="text"
-              placeholder="Answer"
-              className="w-full p-2 border rounded"
-              value={newQuestion.answer}
-              onChange={(e) => setNewQuestion({ ...newQuestion, answer: e.target.value })}
-            />
-            
-            <button
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              onClick={handleAddQuestion}
-            >
-              <Plus size={16} /> Add Question
-            </button>
-          </div>
+        .nav-btn.active {
+            background-color: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
 
-          {/* Display Existing Questions */}
-          {selectedSubject && selectedUnit && selectedLesson && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Existing Questions</h3>
-              {questions[`${selectedSubject}/${selectedUnit}/${selectedLesson}`]?.map((q, index) => (
-                <div key={q.id} className="border p-4 rounded relative">
-                  <button
-                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                    onClick={() => handleDeleteQuestion(`${selectedSubject}/${selectedUnit}/${selectedLesson}`, q.id)}
-                  >
-                    <X size={16} />
-                  </button>
-                  <p className="font-semibold">Question {index + 1}: {q.question}</p>
-                  <ul className="list-disc ml-6">
-                    {q.options.map((option, i) => (
-                      <li key={i}>{option}</li>
-                    ))}
-                  </ul>
-                  <p className="mt-2"><strong>Answer:</strong> {q.answer}</p>
-                </div>
-              ))}
-            </div>
-          )}
+        .semester-toggle {
+            display: inline-flex;
+            gap: 1px;
+            background-color: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .semester-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            background: none;
+            transition: all 0.2s ease;
+            color: #64748b;
+        }
+
+        .semester-btn:hover {
+            color: #0f172a;
+        }
+
+        .semester-btn.active {
+            background-color: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .section-content {
+            padding: 16px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .section-content:hover {
+            background-color: #f8fafc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 24px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .close-modal:hover {
+            background-color: #f1f5f9;
+        }
+
+        .question-container {
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .question-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .error-message {
+            color: #dc2626;
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background-color: #fef2f2;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .option-item {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .answer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            color: #059669;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Question Bank</h1>
         </div>
-      </CardContent>
-    </Card>
-  );
-};
 
-export default QuestionManager;
+        <div class="nav-section">
+            <div class="subjects">
+                <button class="nav-btn" data-subject="arabic">
+                    <span>📚</span> اللغة العربية
+                </button>
+                <button class="nav-btn active" data-subject="english">
+                    <span>🌎</span> English
+                </button>
+                <button class="nav-btn" data-subject="history">
+                    <span>📜</span> التاريخ
+                </button>
+                <button class="nav-btn" data-subject="religion">
+                    <span>📖</span> دين
+                </button>
+            </div>
+
+            <div class="semester-toggle">
+                <button class="semester-btn active" data-semester="first">First Semester</button>
+                <button class="semester-btn" data-semester="second">Second Semester</button>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header">
+                <h2 class="card-title">First Semester</h2>
+            </div>
+            <div class="card-content" id="content">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="questionContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const lessonQuestions = {
+            "english": {
+                "first": {
+                    "Unit 1": {
+                        "Reading and Vocabulary": [
+                            {
+                                question: "What is the main idea of passage 1?",
+                                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+                                answer: "Option 2"
+                            },
+                            {
+                                question: "Which word best describes the author's tone?",
+                                options: ["Happy", "Sad", "Neutral", "Angry"],
+                                answer: "Neutral"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const contentData = {
+            "english": {
+                "first": [
+                    {
+                        title: "Unit 1",
+                        sections: ["Reading and Vocabulary", "Past&Present Tenses&Question Tags"]
+                    },
+                    {
+                        title: "Unit 2",
+                        sections: ["Reading and Vocabulary", "Future Forms"]
+                    },
+                    {
+                        title: "Unit 3",
+                        sections: ["Reading and Vocabulary", "Habits&Clauses"]
+                    },
+                    {
+                        title: "Unit 4",
+                        sections: ["Reading and Vocabulary", "Narration&Inversion"]
+                    }
+                ]
+            }
+        };
+
+        const subjectButtons = document.querySelectorAll('.nav-btn');
+        const semesterButtons = document.querySelectorAll('.semester-btn');
+        const contentContainer = document.getElementById('content');
+        const modal = document.getElementById('questionModal');
+
+        let currentSubject = 'english';
+        let currentSemester = 'first';
+
+        subjectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                subjectButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentSubject = button.dataset.subject;
+                updateContent();
+            });
+        });
+
+        semesterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                semesterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentSemester = button.dataset.semester;
+                updateContent();
+                document.querySelector('.card-title').textContent = 
+                    currentSemester === 'first' ? 'First Semester' : 'Second Semester';
+            });
+        });
+
+        function updateContent() {
+            const data = contentData[currentSubject]?.[currentSemester];
+            if (!data) {
+                contentContainer.innerHTML = '<div class="error-message">No content available for this selection.</div>';
+                return;
+            }
+
+            contentContainer.innerHTML = data.map(unit => `
+                <div class="section">
+                    <div class="section-title">${unit.title}</div>
+                    ${unit.sections.map(section => `
+                        <div class="section-content" onclick="handleSectionClick('${unit.title}', '${section}')">
+                            ${section}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function handleSectionClick(unit, section) {
+            const questions = lessonQuestions[currentSubject]?.[currentSemester]?.[unit]?.[section];
+            
+            const modalTitle = document.getElementById('modalTitle');
+            const questionContent = document.getElementById('questionContent');
+            
+            modalTitle.textContent = `${currentSubject} - ${unit} - ${section}`;
+            
+            if (!questions) {
+                questionContent.innerHTML = `
+                    <div class="error-message">
+                        Questions not found for ${currentSubject} - ${unit} - ${section}
+                    </div>
+                `;
+            } else {
+                questionContent.innerHTML = questions.map((question, index) => `
+                    <div class="question-container">
+                        <div><strong>Question ${index + 1}:</strong> ${question.question}</div>
+                        ${question.options ? `
+                            <ul class="options-list">
+                                ${question.options.map(option => `
+                                    <li class="option-item">${option}</li>
+                                `).join('')}
+                            </ul>
+                        ` : ''}
+                        <div class="answer"><strong>Answer:</strong> ${question.answer}</div>
+                    </div>
+                `).join('');
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        updateContent();
+    </script>
+</body>
+</html>
