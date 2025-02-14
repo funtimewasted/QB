@@ -6,236 +6,114 @@
     <title>Question Bank</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f8fafc;
+            background-color: #ffffff;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .header {
-            margin-bottom: 24px;
+            text-align: left;
+            margin-bottom: 20px;
         }
-
         .header h1 {
             font-size: 24px;
             margin: 0 0 20px 0;
-            color: #0f172a;
         }
-
         .nav-section {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-
         .subjects {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
-
+        .secondary-nav {
+            display: flex;
+            gap: 10px;
+            padding-left: 10px;
+        }
         .nav-btn {
             padding: 8px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background-color: #ffffff;
+            border: 1px solid #e0e0e0;
             transition: all 0.2s ease;
-            color: #0f172a;
         }
-
         .nav-btn:hover {
-            background-color: #f1f5f9;
+            background-color: #f8f9fa;
         }
-
         .nav-btn.active {
             background-color: #0f172a;
             color: white;
-            border-color: #0f172a;
         }
-
         .semester-toggle {
-            display: inline-flex;
-            gap: 1px;
+            display: flex;
+            gap: 5px;
             background-color: #f1f5f9;
             padding: 4px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .semester-btn {
-            padding: 8px 16px;
-            border: none;
             border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .semester-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             background: none;
             transition: all 0.2s ease;
-            color: #64748b;
         }
-
-        .semester-btn:hover {
-            color: #0f172a;
-        }
-
         .semester-btn.active {
             background-color: #ffffff;
-            color: #0f172a;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
-        .content-card {
+        
+        .unit-container {
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
-
-        .card-header {
             padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
         }
-
-        .card-title {
+        .unit-title {
             font-size: 18px;
             font-weight: 600;
-            color: #0f172a;
-            margin: 0;
+            margin-bottom: 20px;
         }
-
-        .card-content {
-            padding: 20px;
-        }
-
         .section {
-            margin-bottom: 24px;
+            margin-bottom: 25px;
         }
-
-        .section:last-child {
-            margin-bottom: 0;
-        }
-
         .section-title {
             font-size: 16px;
             font-weight: 500;
-            color: #64748b;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            color: #4a5568;
         }
-
         .section-content {
-            padding: 16px;
+            padding: 15px;
             background-color: #ffffff;
-            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 10px;
         }
-
-        .section-content:hover {
-            background-color: #f8fafc;
-        }
-
-        .modal {
+        .semester-content {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
         }
-
-        .modal-content {
-            position: relative;
-            background-color: #fff;
-            margin: 50px auto;
-            padding: 24px;
-            width: 90%;
-            max-width: 800px;
-            border-radius: 12px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #64748b;
-            padding: 4px;
-            border-radius: 4px;
-        }
-
-        .close-modal:hover {
-            background-color: #f1f5f9;
-        }
-
-        .question-container {
-            padding: 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .question-container:last-child {
-            margin-bottom: 0;
-        }
-
-        .error-message {
-            color: #dc2626;
-            padding: 16px;
-            margin: 16px 0;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            background-color: #fef2f2;
-        }
-
-        .options-list {
-            list-style: none;
-            padding: 0;
-            margin: 12px 0;
-        }
-
-        .option-item {
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            background-color: #f8fafc;
-            border-radius: 6px;
-        }
-
-        .answer {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e2e8f0;
-            color: #059669;
-            font-weight: 500;
+        .semester-content.active {
+            display: block;
         }
     </style>
 </head>
@@ -244,50 +122,30 @@
         <div class="header">
             <h1>Question Bank</h1>
         </div>
-
         <div class="nav-section">
             <div class="subjects">
-                <button class="nav-btn" data-subject="arabic">
+                <button class="nav-btn" data-subject="اللغة العربية">
                     <span>📚</span> اللغة العربية
                 </button>
                 <button class="nav-btn active" data-subject="english">
                     <span>🌎</span> English
                 </button>
-                <button class="nav-btn" data-subject="history">
+                <button class="nav-btn" data-subject="التاريخ">
                     <span>📜</span> التاريخ
                 </button>
-                <button class="nav-btn" data-subject="religion">
+                <button class="nav-btn" data-subject="دين">
                     <span>📖</span> دين
                 </button>
             </div>
-
-            <div class="semester-toggle">
-                <button class="semester-btn active" data-semester="first">First Semester</button>
-                <button class="semester-btn" data-semester="second">Second Semester</button>
+            <div class="secondary-nav">
+                <div class="semester-toggle">
+                    <button class="semester-btn active" data-semester="first">First Semester</button>
+                    <button class="semester-btn" data-semester="second">Second Semester</button>
+                </div>
+                </div>
             </div>
         </div>
 
-        <div class="content-card">
-            <div class="card-header">
-                <h2 class="card-title">First Semester</h2>
-            </div>
-            <div class="card-content" id="content">
-                <!-- Content will be dynamically inserted here -->
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="questionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
-            </div>
-            <div id="questionContent"></div>
-        </div>
-    </div>
-
-    <script>
         <div id="content">
             <!-- English First Semester -->
             <div id="english-first" class="semester-content active">
@@ -316,7 +174,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- English Second Semester -->
             <div id="english-second" class="semester-content">
                 <div class="unit-container">
@@ -349,7 +206,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Arabic First Semester -->
             <div id="اللغة العربية-first" class="semester-content">
                 <div class="unit-container">
@@ -382,7 +238,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Arabic Second Semester -->
             <div id="اللغة العربية-second" class="semester-content">
                 <div class="unit-container">
@@ -415,7 +270,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- History First Semester -->
             <div id="التاريخ-first" class="semester-content">
                 <div class="unit-container">
@@ -449,7 +303,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- History Second Semester -->
             <div id="التاريخ-second" class="semester-content">
                 <div class="unit-container">
@@ -500,7 +353,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Islamic First Semester -->
             <div id="دين-first" class="semester-content">
                 <div class="unit-container">
@@ -545,7 +397,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Islamic Second Semester -->
             <div id="دين-second" class="semester-content">
                 <div class="unit-container">
@@ -591,273 +442,49 @@
                     </div>
                 </div>
             </div>
-// Question Bank Structure
-const questionBank = {
-    english: {
-        first: {
-            unit1: {
-                reading: [
-                    {
-                        question: "What is the main idea of the passage about climate change?",
-                        options: [
-                            "Global temperature trends",
-                            "Impact on ecosystems",
-                            "Human contribution",
-                            "Solutions and adaptations"
-                        ],
-                        correct: 0
-                    },
-                    {
-                        question: "Which supporting detail is most relevant to the main idea?",
-                        options: [
-                            "Historical records",
-                            "Scientific measurements",
-                            "Personal observations",
-                            "Media reports"
-                        ],
-                        correct: 1
-                    }
-                ],
-                grammar: [
-                    {
-                        question: "Choose the correct past tense form:",
-                        options: [
-                            "He has been working",
-                            "He had been working",
-                            "He was working",
-                            "He is working"
-                        ],
-                        correct: 2
-                    },
-                    {
-                        question: "Identify the correct question tag:",
-                        options: [
-                            "You like coffee, don't you?",
-                            "You like coffee, aren't you?",
-                            "You like coffee, do you?",
-                            "You like coffee, didn't you?"
-                        ],
-                        correct: 0
-                    }
-                ]
-            },
-            unit2: {
-                reading: [
-                    {
-                        question: "What is the author's purpose in the technology passage?",
-                        options: [
-                            "To inform about developments",
-                            "To criticize modern devices",
-                            "To compare different gadgets",
-                            "To predict future trends"
-                        ],
-                        correct: 0
-                    }
-                ],
-                grammar: [
-                    {
-                        question: "Select the correct future form:",
-                        options: [
-                            "I will going",
-                            "I am going to go",
-                            "I will be go",
-                            "I going to"
-                        ],
-                        correct: 1
-                    }
-                ]
-            }
-        },
-        second: {
-            unit1: {
-                reading: [
-                    {
-                        question: "What is the main theme of the cultural diversity passage?",
-                        options: [
-                            "Global unity",
-                            "Cultural differences",
-                            "Traditional values",
-                            "Modern perspectives"
-                        ],
-                        correct: 0
-                    }
-                ],
-                grammar: [
-                    {
-                        question: "Choose the correct modal verb:",
-                        options: [
-                            "Must to go",
-                            "Must go",
-                            "Must going",
-                            "Must to going"
-                        ],
-                        correct: 1
-                    }
-                ]
-            }
-        }
-    },
-    arabic: {
-        first: {
-            unit1: {
-                reading: [
-                    {
-                        question: "ما الفكرة الرئيسية للنص حول القيم الإنسانية في القرآن؟",
-                        options: [
-                            "التسامح والعدل",
-                            "العبادات والشعائر",
-                            "القصص القرآني",
-                            "الأحكام الشرعية"
-                        ],
-                        correct: 0
-                    }
-                ],
-                grammar: [
-                    {
-                        question: "ما هو الأسلوب المناسب في جملة الطلب؟",
-                        options: [
-                            "اكتب الدرس",
-                            "يكتب الدرس",
-                            "كتب الدرس",
-                            "كاتب الدرس"
-                        ],
-                        correct: 0
-                    }
-                ]
-            }
-        }
-    }
-};
-
-class Exam {
-    constructor(subject, semester, unit, section, questions) {
-        this.subject = subject;
-        this.semester = semester;
-        this.unit = unit;
-        this.section = section;
-        this.questions = this.shuffleQuestions(questions);
-        this.currentIndex = 0;
-        this.userAnswers = new Array(questions.length).fill(null);
-    }
-
-    shuffleQuestions(questions) {
-        const shuffled = [...questions];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
-
-    getCurrentQuestion() {
-        return this.questions[this.currentIndex];
-    }
-
-    selectAnswer(answerIndex) {
-        this.userAnswers[this.currentIndex] = answerIndex;
-    }
-
-    getProgress() {
-        return {
-            current: this.currentIndex + 1,
-            total: this.questions.length,
-            isFirst: this.currentIndex === 0,
-            isLast: this.currentIndex === this.questions.length - 1
-        };
-    }
-}
-
-        const subjectButtons = document.querySelectorAll('.nav-btn');
-        const semesterButtons = document.querySelectorAll('.semester-btn');
-        const contentContainer = document.getElementById('content');
-        const modal = document.getElementById('questionModal');
-
-        let currentSubject = 'english';
-        let currentSemester = 'first';
-
-        subjectButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                subjectButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentSubject = button.dataset.subject;
+    <script>
+        // Add event listeners for subject buttons
+        document.querySelectorAll('.nav-btn[data-subject]').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all subject buttons
+                document.querySelectorAll('.nav-btn[data-subject]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding content
                 updateContent();
             });
         });
-
-        semesterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                semesterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentSemester = button.dataset.semester;
+        // Add event listeners for semester buttons
+        document.querySelectorAll('.semester-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all semester buttons
+                document.querySelectorAll('.semester-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding content
                 updateContent();
-                document.querySelector('.card-title').textContent = 
-                    currentSemester === 'first' ? 'First Semester' : 'Second Semester';
             });
         });
-
         function updateContent() {
-            const data = contentData[currentSubject]?.[currentSemester];
-            if (!data) {
-                contentContainer.innerHTML = '<div class="error-message">No content available for this selection.</div>';
-                return;
-            }
-
-            contentContainer.innerHTML = data.map(unit => `
-                <div class="section">
-                    <div class="section-title">${unit.title}</div>
-                    ${unit.sections.map(section => `
-                        <div class="section-content" onclick="handleSectionClick('${unit.title}', '${section}')">
-                            ${section}
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
+            // Get active subject and semester
+            const activeSubject = document.querySelector('.nav-btn[data-subject].active').dataset.subject;
+            const activeSemester = document.querySelector('.semester-btn.active').dataset.semester;
+            
+            // Hide all content
+            document.querySelectorAll('.semester-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected content
+            const contentId = `${activeSubject}-${activeSemester}`;
+            document.getElementById(contentId).classList.add('active');
         }
-
-        function handleSectionClick(unit, section) {
-            const questions = lessonQuestions[currentSubject]?.[currentSemester]?.[unit]?.[section];
-            
-            const modalTitle = document.getElementById('modalTitle');
-            const questionContent = document.getElementById('questionContent');
-            
-            modalTitle.textContent = `${currentSubject} - ${unit} - ${section}`;
-            
-            if (!questions) {
-                questionContent.innerHTML = `
-                    <div class="error-message">
-                        Questions not found for ${currentSubject} - ${unit} - ${section}
-                    </div>
-                `;
-            } else {
-                questionContent.innerHTML = questions.map((question, index) => `
-                    <div class="question-container">
-                        <div><strong>Question ${index + 1}:</strong> ${question.question}</div>
-                        ${question.options ? `
-                            <ul class="options-list">
-                                ${question.options.map(option => `
-                                    <li class="option-item">${option}</li>
-                                `).join('')}
-                            </ul>
-                        ` : ''}
-                        <div class="answer"><strong>Answer:</strong> ${question.answer}</div>
-                    </div>
-                `).join('');
-            }
-            
-            modal.style.display = 'block';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
-
-        updateContent();
     </script>
 </body>
 </html>
