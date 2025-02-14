@@ -1,520 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Bank</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #ffffff;
-        }
+import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Plus, Save, X } from 'lucide-react';
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+const QuestionManager = () => {
+  const [questions, setQuestions] = useState({});
+  const [newQuestion, setNewQuestion] = useState({
+    question: '',
+    options: ['', '', '', ''],
+    answer: ''
+  });
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedUnit, setSelectedUnit] = useState('');
+  const [selectedLesson, setSelectedLesson] = useState('');
+  
+  // Load questions from localStorage on component mount
+  useEffect(() => {
+    const savedQuestions = localStorage.getItem('lessonQuestions');
+    if (savedQuestions) {
+      setQuestions(JSON.parse(savedQuestions));
+    }
+  }, []);
 
-        .header {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+  // Save questions to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('lessonQuestions', JSON.stringify(questions));
+  }, [questions]);
 
-        .header h1 {
-            font-size: 24px;
-            margin: 0 0 20px 0;
-        }
+  const handleAddQuestion = () => {
+    if (!selectedSubject || !selectedUnit || !selectedLesson) {
+      alert('Please select a subject, unit, and lesson first');
+      return;
+    }
 
-        .nav-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+    const path = `${selectedSubject}/${selectedUnit}/${selectedLesson}`;
+    const currentQuestions = questions[path] || [];
+    
+    setQuestions({
+      ...questions,
+      [path]: [...currentQuestions, { ...newQuestion, id: Date.now() }]
+    });
 
-        .subjects {
-            display: flex;
-            gap: 10px;
-        }
+    setNewQuestion({
+      question: '',
+      options: ['', '', '', ''],
+      answer: ''
+    });
+  };
 
-        .secondary-nav {
-            display: flex;
-            gap: 10px;
-            padding-left: 10px;
-        }
+  const handleDeleteQuestion = (path, questionId) => {
+    const updatedQuestions = questions[path].filter(q => q.id !== questionId);
+    setQuestions({
+      ...questions,
+      [path]: updatedQuestions
+    });
+  };
 
-        .nav-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            transition: all 0.2s ease;
-        }
-
-        .nav-btn:hover {
-            background-color: #f8f9fa;
-        }
-
-        .nav-btn.active {
-            background-color: #0f172a;
-            color: white;
-        }
-
-        .semester-toggle {
-            display: flex;
-            gap: 5px;
-            background-color: #f1f5f9;
-            padding: 4px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .semester-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            background: none;
-            transition: all 0.2s ease;
-        }
-
-        .semester-btn.active {
-            background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .unit-container {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e0e0e0;
-            margin-bottom: 20px;
-        }
-
-        .unit-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .section {
-            margin-bottom: 25px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 15px;
-            color: #4a5568;
-        }
-
-        .section-content {
-            padding: 15px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            margin-bottom: 10px;
-        }
-
-        .semester-content {
-            display: none;
-        }
-
-        .semester-content.active {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Question Bank</h1>
-        </div>
-
-        <div class="nav-section">
-            <div class="subjects">
-                <button class="nav-btn" data-subject="اللغة العربية">
-                    <span>📚</span> اللغة العربية
-                </button>
-                <button class="nav-btn active" data-subject="english">
-                    <span>🌎</span> English
-                </button>
-                <button class="nav-btn" data-subject="التاريخ">
-                    <span>📜</span> التاريخ
-                </button>
-                <button class="nav-btn" data-subject="دين">
-                    <span>📖</span> دين
-                </button>
-            </div>
-
-            <div class="secondary-nav">
-                <div class="semester-toggle">
-                    <button class="semester-btn active" data-semester="first">First Semester</button>
-                    <button class="semester-btn" data-semester="second">Second Semester</button>
-                </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="content">
-            <!-- English First Semester -->
-            <div id="english-first" class="semester-content active">
-                <div class="unit-container">
-                    <div class="unit-title">First Semester</div>
-                    <!-- Units 1-5 -->
-                    <div class="section">
-                        <div class="section-title">Unit 1</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Past&Present Tenses&Question Tags</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 2</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Future Forms</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 3</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Habits&Clauses</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 4</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Narration&Inversion</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- English Second Semester -->
-            <div id="english-second" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">Second Semester</div>
-                    <!-- Units 1-5 -->
-                    <div class="section">
-                        <div class="section-title">Unit 1</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Modal&Related&Articles</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 2</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Reported Speach&Reporting Verbs</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 3</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">The Passive</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 4</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Conditionals&Modals</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Unit 5</div>
-                        <div class="section-content">Reading and Vocabulary</div>
-                        <div class="section-content">Modals&Clauses</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Arabic First Semester -->
-            <div id="اللغة العربية-first" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الأول</div>
-                    <!-- Lessons 1-5 -->
-                    <div class="section">
-                        <div class="section-title">الوحدة الأولى</div>
-                        <div class="section-content">من القيم الإنسانية في القرآن</div>
-                        <div class="section-content">اسلوب الطلب وجوابه المجزوم والتشبيه المفرد</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثانية</div>
-                        <div class="section-content">عمانيات</div>
-                        <div class="section-content">صور الفاعل والتشبيه التمثيلي</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثالثة</div>
-                        <div class="section-content">الزهايمر-الخرف المبكر</div>
-                        <div class="section-content">صور المبتدأ والخبر والجملة الخبرية والإنشائية</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الرابعة</div>
-                        <div class="section-content">الإعلام ومشروع النهوض باللغة العربية</div>
-                        <div class="section-content">المفعول معه والأمر</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الخامسة</div>
-                        <div class="section-content">التعليم التقني بوابة المستقبل في عالم متغير</div>
-                        <div class="section-content">انواع ما والإستفهام</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Arabic Second Semester -->
-            <div id="اللغة العربية-second" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الثاني</div>
-                    <!-- Lessons 1-5 -->
-                    <div class="section">
-                        <div class="section-title">الوحدة الأولى</div>
-                        <div class="section-content">في فتح القدس</div>
-                        <div class="section-content">معاني حروف الجر والتشخيص</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثانية</div>
-                        <div class="section-content">قصة-حفنة تمر</div>
-                        <div class="section-content">اسم الفاعل واسم المفعول والطباق والمقابلة</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثالثة</div>
-                        <div class="section-content">شاعرات من بلدي</div>
-                        <div class="section-content">اسم الزمان واسم المكان وجمع التكسير (القلة والكثرة)</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الرابعة</div>
-                        <div class="section-content">من مقامات بديع الزمان الهمذاني</div>
-                        <div class="section-content">مصدر المرة ومصدر الهيئة والبحر المتدارك</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الخامسة</div>
-                        <div class="section-content">الذكاء الاصطناعي-عالم جديد</div>
-                        <div class="section-content">اسم الآلة</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- History First Semester -->
-            <div id="التاريخ-first" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الأول</div>
-                    <!-- Unit 1 (5 sections) -->
-                    <div class="section">
-                        <div class="section-title">الأردن في العصور القديمة</div>
-                        <div class="section-content">الأردن في العصور الحجرية</div>
-                        <div class="section-content">الأردن في العصر الحديدي</div>
-                        <div class="section-content">مملكة الأنباط</div>
-                        <div class="section-content">مظاهر الحضارة اليونانية في الأردن</div>
-                        <div class="section-content">مظاهر الحضارة الرومانية-البيزنطية في الأردن</div>
-                    </div>
-                    <!-- Unit 2 (6 sections) -->
-                    <div class="section">
-                        <div class="section-title">الأردن في صدر الإسلام</div>
-                        <div class="section-content">الأردن في صدر الإسلام</div>
-                        <div class="section-content">الأردن في العصر الأموي</div>
-                        <div class="section-content">الأردن في العصر العباسي</div>
-                        <div class="section-content">الأردن خلال حملات الفرنجة</div>
-                        <div class="section-content">الأردن في العصر الأيوبي</div>
-                        <div class="section-content">الأردن في العصر المملوكي</div>
-                    </div>
-                    <!-- Unit 3 (4 sections) -->
-                    <div class="section">
-                        <div class="section-title">الأردن في العصر الحديث</div>
-                        <div class="section-content">الأوضاع السياسية والإدارية في الأردن في العهد العثماني</div>
-                        <div class="section-content">الأوضاع الإجتماعية والإقتصادية الأردن في العهد العثماني</div>
-                        <div class="section-content">الثورة العربية الكبرى</div>
-                        <div class="section-content">الأردن في عهد المملكة العربية السورية والحكومات المحلية</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- History Second Semester -->
-            <div id="التاريخ-second" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الثاني</div>
-                    <!-- Unit 1 (8 sections) -->
-                    <div class="section">
-                        <div class="section-title">الحياة السياسية في الأردن</div>
-                        <div class="section-content">تأسيس الإمارة الأردنية</div>
-                        <div class="section-content">استقلال المملكة الأردنية الهاشمية</div>
-                        <div class="section-content">تطور الحياة السياسية في الأردن بين عامي (1948-1957)</div>
-                        <div class="section-content">تطور الحياة السياسية في الأردن بين عامي (1958-1999)</div>
-                        <div class="section-content">الحياة السياسية في الأردن منذ 1999</div>
-                        <div class="section-content">الأردن والعلاقات العربية والدولية</div>
-                        <div class="section-content">القوات المسلحة الأردنية - الجيش العربي</div>
-                        <div class="section-content">الأجهزة الأمنية الأردنية</div>
-                    </div>
-                    <!-- Unit 2 (4 sections) -->
-                    <div class="section">
-                        <div class="section-title">الحياة الاقتصادية في الأردن</div>
-                        <div class="section-content">الحياة الاقتصادية في الأردن بين عامي (1921-1950)</div>
-                        <div class="section-content">الحياة الاقتصادية في الأردن بين عامي (1951-1967)</div>
-                        <div class="section-content">الحياة الاقتصادية في الأردن بين عامي (1968-1999)</div>
-                        <div class="section-content">الحياة الاقتصادية في الأردن منذ عام 1999</div>
-                    </div>
-                    <!-- Unit 3 (3 sections) -->
-                    <div class="section">
-                        <div class="section-title">الحياة الاجتماعية في الأردن</div>
-                        <div class="section-content">الحياة الاجتماعية في الأردن بين عامي (1921-1950)</div>
-                        <div class="section-content">الحياة الاجتماعية في الأردن بين عامي (1951-1999)</div>
-                        <div class="section-content">الحياة الاجتماعية في الأردن منذ عام 1999</div>
-                    </div>
-                    <!-- Unit 4 (6 sections) -->
-                    <div class="section">
-                        <div class="section-title">التعليم والثقافة في الأردن</div>
-                        <div class="section-content">التعليم العام في الأردن بين عامي (1921-1950)</div>
-                        <div class="section-content">التعليم العام في الأردن بين عامي (1951-1987)</div>
-                        <div class="section-content">التعليم العام في الأردن بين عامي (1988-2024)</div>
-                        <div class="section-content">التعليم العالي والبحث العلمي في الأردن منذ عام 1951</div>
-                        <div class="section-content">الحياة الثقافية في الأردن في عهد الإمارة</div>
-                        <div class="section-content">الحياة الثقافية في الأردن منذ عام 1946</div>
-                    </div>
-                    <!-- Unit 5 (3 sections) -->
-                    <div class="section">
-                        <div class="section-title">الأردن والقضية الفلسطينية</div>
-                        <div class="section-content">موقف الأردن من القضية الفلسطينية بين عامي (1916-1951)</div>
-                        <div class="section-content">موقف الأردن من القضية الفلسطينية منذ عام 1951</div>
-                        <div class="section-content">الوصاية والإعمار الهاشمي للمقدسات الدينية في القدس</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Islamic First Semester -->
-            <div id="دين-first" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الأول</div>
-                    <!-- 4 Units with varying sections -->
-                    <div class="section">
-                        <div class="section-title">الوحدة الأولى</div>
-                        <div class="section-content">سورة آل عمران (102-105)</div>
-                        <div class="section-content">حديث اتقاء الشبهات</div>
-                        <div class="section-content">من صور الضلال</div>
-                        <div class="section-content">كرامة الإنسان في الشريعة</div>
-                        <div class="section-content">الزواج-مشروعيته ومقدماته</div>
-                        <div class="section-content">الجهاد في الإسلام</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثانية</div>
-                        <div class="section-content">جهود علماء المسلمين في خدمة القرآن</div>
-                        <div class="section-content">العزيمة والرخصة</div>
-                        <div class="section-content">معركة مؤتة (8 هجري)</div>
-                        <div class="section-content">المحرمات من النساء</div>
-                        <div class="section-content">التعايش الإنساني</div>
-                        <div class="section-content">الحقوق الإجتماعية للمرأة في الإسلام</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثالثة</div>
-                        <div class="section-content">سورة آل عمران (169-174)</div>
-                        <div class="section-content">حديث - رضا الله تعالى</div>
-                        <div class="section-content">فتح مكة (8 هجري)</div>
-                        <div class="section-content">من خصائص الشريعة - الإيجابية</div>
-                        <div class="section-content">شروط صحة عقد الزواج</div>
-                        <div class="section-content">الحقوق المالية للمرأة في الإسلام</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الرابعة</div>
-                        <div class="section-content">سورة الروم (21-24)</div>
-                        <div class="section-content">مكانة السنة النبوية في التشريع</div>
-                        <div class="section-content">مراعاة الأعراف في الشريعة</div>
-                        <div class="section-content">حقوق الزوجين</div>
-                        <div class="section-content">تنظيم النسل وتحديده</div>
-                        <div class="section-content">الأمن الغذائي في الإسلام</div>
-                        <div class="section-content">الإسلام والوحدة الوطنية</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Islamic Second Semester -->
-            <div id="دين-second" class="semester-content">
-                <div class="unit-container">
-                    <div class="unit-title">الفصل الثاني</div>
-                    <!-- 4 Units with varying sections -->
-                    <div class="section">
-                        <div class="section-title">الوحدة الأولى</div>
-                        <div class="section-content">سورة البقرة (284-286)</div>
-                        <div class="section-content">دلائل وجود الله تعالى</div>
-                        <div class="section-content">إعجاز القرآن الكريم</div>
-                        <div class="section-content">الأمر بالمعروف والنهي عن المنكر</div>
-                        <div class="section-content">اليوم الآخر - احداثه وآثار الإيمان به</div>
-                        <div class="section-content">الإجتهاد في الإسلام</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثانية</div>
-                        <div class="section-content">سورة الأعراف (31-34)</div>
-                        <div class="section-content">مراعاة المصالح في الشريعة</div>
-                        <div class="section-content">جهود علماء المسلمين في الحفاظ على السنة النبوية</div>
-                        <div class="section-content">حديث - منهج الإسلام في الحياة</div>
-                        <div class="section-content">رسائل النبي الى الملوك والزعماء في عصره</div>
-                        <div class="section-content">يوم تبوك (9 هجري)</div>
-                        <div class="section-content">الحقوق السياسية للمرأة في الإسلام</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الثالثة</div>
-                        <div class="section-content">سورة الفرقان (63-77)</div>
-                        <div class="section-content">الطلاق</div>
-                        <div class="section-content">العدة</div>
-                        <div class="section-content">الوصية في الشريعة</div>
-                        <div class="section-content">الميراث في الشريعة</div>
-                        <div class="section-content">من خصائص الشريعة - الوسطية</div>
-                        <div class="section-content">مجالات الوقف ودورها في التنمية</div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">الوحدة الرابعة</div>
-                        <div class="section-content">حديث - مفهوم الإفلاس بين الدنيا والآخرة</div>
-                        <div class="section-content">مقاصد الشريعة</div>
-                        <div class="section-content">منهج الإسلام في مكافحة الجريمة</div>
-                        <div class="section-content">من وصايا النبي في حجة الوداع</div>
-                        <div class="section-content">المسؤولية المجتمعية في الإسلام</div>
-                        <div class="section-content">حقوق الإنسان بين الإسلام والإعلان العالمي لحقوق الإنسان</div>
-                    </div>
-                </div>
-            </div>
-    <script>
-
-        // Add event listeners for subject buttons
-        document.querySelectorAll('.nav-btn[data-subject]').forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove active class from all subject buttons
-                document.querySelectorAll('.nav-btn[data-subject]').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Show corresponding content
-                updateContent();
-            });
-        });
-
-        // Add event listeners for semester buttons
-        document.querySelectorAll('.semester-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove active class from all semester buttons
-                document.querySelectorAll('.semester-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Show corresponding content
-                updateContent();
-            });
-        });
-
-        function updateContent() {
-            // Get active subject and semester
-            const activeSubject = document.querySelector('.nav-btn[data-subject].active').dataset.subject;
-            const activeSemester = document.querySelector('.semester-btn.active').dataset.semester;
+  return (
+    <Card className="w-full max-w-4xl">
+      <CardHeader>
+        <CardTitle>Question Manager</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {/* Selection Controls */}
+          <div className="grid grid-cols-3 gap-4">
+            <select 
+              className="p-2 border rounded"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+            >
+              <option value="">Select Subject</option>
+              <option value="english">English</option>
+              <option value="اللغة العربية">اللغة العربية</option>
+              <option value="التاريخ">التاريخ</option>
+              <option value="دين">دين</option>
+            </select>
             
-            // Hide all content
-            document.querySelectorAll('.semester-content').forEach(content => {
-                content.classList.remove('active');
-            });
+            <select 
+              className="p-2 border rounded"
+              value={selectedUnit}
+              onChange={(e) => setSelectedUnit(e.target.value)}
+            >
+              <option value="">Select Unit</option>
+              <option value="Unit 1">Unit 1</option>
+              <option value="Unit 2">Unit 2</option>
+              <option value="Unit 3">Unit 3</option>
+              <option value="Unit 4">Unit 4</option>
+              <option value="Unit 5">Unit 5</option>
+            </select>
             
-            // Show selected content
-            const contentId = `${activeSubject}-${activeSemester}`;
-            document.getElementById(contentId).classList.add('active');
-        }
-    </script>
-</body>
-</html>
+            <select 
+              className="p-2 border rounded"
+              value={selectedLesson}
+              onChange={(e) => setSelectedLesson(e.target.value)}
+            >
+              <option value="">Select Lesson</option>
+              <option value="Reading and Vocabulary">Reading and Vocabulary</option>
+              <option value="Grammar">Grammar</option>
+            </select>
+          </div>
+
+          {/* New Question Form */}
+          <div className="space-y-4 border p-4 rounded">
+            <input
+              type="text"
+              placeholder="Enter question"
+              className="w-full p-2 border rounded"
+              value={newQuestion.question}
+              onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+            />
+            
+            {newQuestion.options.map((option, index) => (
+              <input
+                key={index}
+                type="text"
+                placeholder={`Option ${index + 1}`}
+                className="w-full p-2 border rounded"
+                value={option}
+                onChange={(e) => {
+                  const newOptions = [...newQuestion.options];
+                  newOptions[index] = e.target.value;
+                  setNewQuestion({ ...newQuestion, options: newOptions });
+                }}
+              />
+            ))}
+            
+            <input
+              type="text"
+              placeholder="Answer"
+              className="w-full p-2 border rounded"
+              value={newQuestion.answer}
+              onChange={(e) => setNewQuestion({ ...newQuestion, answer: e.target.value })}
+            />
+            
+            <button
+              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={handleAddQuestion}
+            >
+              <Plus size={16} /> Add Question
+            </button>
+          </div>
+
+          {/* Display Existing Questions */}
+          {selectedSubject && selectedUnit && selectedLesson && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Existing Questions</h3>
+              {questions[`${selectedSubject}/${selectedUnit}/${selectedLesson}`]?.map((q, index) => (
+                <div key={q.id} className="border p-4 rounded relative">
+                  <button
+                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                    onClick={() => handleDeleteQuestion(`${selectedSubject}/${selectedUnit}/${selectedLesson}`, q.id)}
+                  >
+                    <X size={16} />
+                  </button>
+                  <p className="font-semibold">Question {index + 1}: {q.question}</p>
+                  <ul className="list-disc ml-6">
+                    {q.options.map((option, i) => (
+                      <li key={i}>{option}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-2"><strong>Answer:</strong> {q.answer}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default QuestionManager;
