@@ -288,49 +288,342 @@
     </div>
 
     <script>
-        const lessonQuestions = {
-            "english": {
-                "first": {
-                    "Unit 1": {
-                        "Reading and Vocabulary": [
-                            {
-                                question: "What is the main idea of passage 1?",
-                                options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-                                answer: "Option 2"
-                            },
-                            {
-                                question: "Which word best describes the author's tone?",
-                                options: ["Happy", "Sad", "Neutral", "Angry"],
-                                answer: "Neutral"
-                            }
-                        ]
-                    }
+        // Subject content structure
+const subjectContent = {
+    english: {
+        first: {
+            title: "English - First Semester",
+            units: [
+                {
+                    title: "Unit 1",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Past&Present Tenses&Question Tags", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 2",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Future Forms", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 3",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Habits&Clauses", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 4",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Narration&Inversion", type: "grammar" }
+                    ]
                 }
-            }
-        };
+            ]
+        },
+        second: {
+            title: "English - Second Semester",
+            units: [
+                {
+                    title: "Unit 1",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Modal&Related&Articles", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 2",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Reported Speach&Reporting Verbs", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 3",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "The Passive", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 4",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Conditionals&Modals", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "Unit 5",
+                    sections: [
+                        { title: "Reading and Vocabulary", type: "reading" },
+                        { title: "Modals&Clauses", type: "grammar" }
+                    ]
+                }
+            ]
+        }
+    },
+    arabic: {
+        first: {
+            title: "اللغة العربية - الفصل الأول",
+            units: [
+                {
+                    title: "الوحدة الأولى",
+                    sections: [
+                        { title: "من القيم الإنسانية في القرآن", type: "reading" },
+                        { title: "اسلوب الطلب وجوابه المجزوم والتشبيه المفرد", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الثانية",
+                    sections: [
+                        { title: "عمانيات", type: "reading" },
+                        { title: "صور الفاعل والتشبيه التمثيلي", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الثالثة",
+                    sections: [
+                        { title: "الزهايمر-الخرف المبكر", type: "reading" },
+                        { title: "صور المبتدأ والخبر والجملة الخبرية والإنشائية", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الرابعة",
+                    sections: [
+                        { title: "الإعلام ومشروع النهوض باللغة العربية", type: "reading" },
+                        { title: "المفعول معه والأمر", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الخامسة",
+                    sections: [
+                        { title: "التعليم التقني بوابة المستقبل في عالم متغير", type: "reading" },
+                        { title: "انواع ما والإستفهام", type: "grammar" }
+                    ]
+                }
+            ]
+        },
+        second: {
+            title: "اللغة العربية - الفصل الثاني",
+            units: [
+                {
+                    title: "الوحدة الأولى",
+                    sections: [
+                        { title: "في فتح القدس", type: "reading" },
+                        { title: "معاني حروف الجر والتشخيص", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الثانية",
+                    sections: [
+                        { title: "قصة-حفنة تمر", type: "reading" },
+                        { title: "اسم الفاعل واسم المفعول والطباق والمقابلة", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الثالثة",
+                    sections: [
+                        { title: "شاعرات من بلدي", type: "reading" },
+                        { title: "اسم الزمان واسم المكان وجمع التكسير", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الرابعة",
+                    sections: [
+                        { title: "من مقامات بديع الزمان الهمذاني", type: "reading" },
+                        { title: "مصدر المرة ومصدر الهيئة والبحر المتدارك", type: "grammar" }
+                    ]
+                },
+                {
+                    title: "الوحدة الخامسة",
+                    sections: [
+                        { title: "الذكاء الاصطناعي-عالم جديد", type: "reading" },
+                        { title: "اسم الآلة", type: "grammar" }
+                    ]
+                }
+            ]
+        }
+    }
+};
 
-        const contentData = {
-            "english": {
-                "first": [
+// Question Bank Structure
+const questionBank = {
+    english: {
+        first: {
+            unit1: {
+                reading: [
                     {
-                        title: "Unit 1",
-                        sections: ["Reading and Vocabulary", "Past&Present Tenses&Question Tags"]
+                        question: "What is the main idea of the passage about climate change?",
+                        options: [
+                            "Global temperature trends",
+                            "Impact on ecosystems",
+                            "Human contribution",
+                            "Solutions and adaptations"
+                        ],
+                        correct: 0
                     },
                     {
-                        title: "Unit 2",
-                        sections: ["Reading and Vocabulary", "Future Forms"]
+                        question: "Which supporting detail is most relevant to the main idea?",
+                        options: [
+                            "Historical records",
+                            "Scientific measurements",
+                            "Personal observations",
+                            "Media reports"
+                        ],
+                        correct: 1
+                    }
+                ],
+                grammar: [
+                    {
+                        question: "Choose the correct past tense form:",
+                        options: [
+                            "He has been working",
+                            "He had been working",
+                            "He was working",
+                            "He is working"
+                        ],
+                        correct: 2
                     },
                     {
-                        title: "Unit 3",
-                        sections: ["Reading and Vocabulary", "Habits&Clauses"]
-                    },
+                        question: "Identify the correct question tag:",
+                        options: [
+                            "You like coffee, don't you?",
+                            "You like coffee, aren't you?",
+                            "You like coffee, do you?",
+                            "You like coffee, didn't you?"
+                        ],
+                        correct: 0
+                    }
+                ]
+            },
+            unit2: {
+                reading: [
                     {
-                        title: "Unit 4",
-                        sections: ["Reading and Vocabulary", "Narration&Inversion"]
+                        question: "What is the author's purpose in the technology passage?",
+                        options: [
+                            "To inform about developments",
+                            "To criticize modern devices",
+                            "To compare different gadgets",
+                            "To predict future trends"
+                        ],
+                        correct: 0
+                    }
+                ],
+                grammar: [
+                    {
+                        question: "Select the correct future form:",
+                        options: [
+                            "I will going",
+                            "I am going to go",
+                            "I will be go",
+                            "I going to"
+                        ],
+                        correct: 1
                     }
                 ]
             }
+        },
+        second: {
+            unit1: {
+                reading: [
+                    {
+                        question: "What is the main theme of the cultural diversity passage?",
+                        options: [
+                            "Global unity",
+                            "Cultural differences",
+                            "Traditional values",
+                            "Modern perspectives"
+                        ],
+                        correct: 0
+                    }
+                ],
+                grammar: [
+                    {
+                        question: "Choose the correct modal verb:",
+                        options: [
+                            "Must to go",
+                            "Must go",
+                            "Must going",
+                            "Must to going"
+                        ],
+                        correct: 1
+                    }
+                ]
+            }
+        }
+    },
+    arabic: {
+        first: {
+            unit1: {
+                reading: [
+                    {
+                        question: "ما الفكرة الرئيسية للنص حول القيم الإنسانية في القرآن؟",
+                        options: [
+                            "التسامح والعدل",
+                            "العبادات والشعائر",
+                            "القصص القرآني",
+                            "الأحكام الشرعية"
+                        ],
+                        correct: 0
+                    }
+                ],
+                grammar: [
+                    {
+                        question: "ما هو الأسلوب المناسب في جملة الطلب؟",
+                        options: [
+                            "اكتب الدرس",
+                            "يكتب الدرس",
+                            "كتب الدرس",
+                            "كاتب الدرس"
+                        ],
+                        correct: 0
+                    }
+                ]
+            }
+        }
+    }
+};
+
+class Exam {
+    constructor(subject, semester, unit, section, questions) {
+        this.subject = subject;
+        this.semester = semester;
+        this.unit = unit;
+        this.section = section;
+        this.questions = this.shuffleQuestions(questions);
+        this.currentIndex = 0;
+        this.userAnswers = new Array(questions.length).fill(null);
+    }
+
+    shuffleQuestions(questions) {
+        const shuffled = [...questions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    getCurrentQuestion() {
+        return this.questions[this.currentIndex];
+    }
+
+    selectAnswer(answerIndex) {
+        this.userAnswers[this.currentIndex] = answerIndex;
+    }
+
+    getProgress() {
+        return {
+            current: this.currentIndex + 1,
+            total: this.questions.length,
+            isFirst: this.currentIndex === 0,
+            isLast: this.currentIndex === this.questions.length - 1
         };
+    }
+}
 
         const subjectButtons = document.querySelectorAll('.nav-btn');
         const semesterButtons = document.querySelectorAll('.semester-btn');
